@@ -1,0 +1,15 @@
+# AI
+.planning/
+
+# CI work trees and build outputs
+/work/
+/artifacts/
+
+# Local editor/OS files
+.DS_Store
+*.swp
+*.tmp
+
+# Python cache
+__pycache__/
+*.py[cod]

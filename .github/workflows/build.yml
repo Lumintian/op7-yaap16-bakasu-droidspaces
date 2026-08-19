@@ -1,0 +1,116 @@
+name: Build YAAP16 guacamoleb Droidspaces + ReSukiSU kernel
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/build.yml"
+      - "config/**"
+      - "packaging/**"
+      - "patches/**"
+      - "scripts/**"
+      - "tests/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: yaap16-guacamoleb-kernel-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+
+    steps:
+      - name: Check out wrapper project
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends \
+            bc bison build-essential ca-certificates cpio curl file flex git \
+            libelf-dev libssl-dev make python3 rsync unzip xz-utils zip zstd
+
+      - name: Validate wrapper inputs and scripts
+        run: ./scripts/validate-project.sh
+
+      - name: Restore pinned Clang toolchain cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: work/clang-r547379
+          key: aosp-clang-linux-x86-r547379-9916fb51ccb914d62d35ad9a7b9b21d2ef046928-v1
+
+      - name: Download and verify pinned Clang
+        run: ./scripts/download-toolchain.sh "$GITHUB_WORKSPACE/work/clang-r547379"
+
+      - name: Fetch immutable upstream sources
+        run: ./scripts/fetch-sources.sh "$GITHUB_WORKSPACE/work"
+
+      - name: Apply manual hooks and wire ReSukiSU
+        run: ./scripts/prepare-kernel.sh "$GITHUB_WORKSPACE/work/kernel" "$GITHUB_WORKSPACE/work/resuki"
+
+      - name: Generate safety baseline config
+        run: |
+          ./scripts/configure-kernel.sh \
+            "$GITHUB_WORKSPACE/work/kernel" \
+            "$GITHUB_WORKSPACE/work/out-baseline" \
+            "$GITHUB_WORKSPACE/work/clang-r547379" \
+            "$GITHUB_WORKSPACE/config/yaap16-baseline.config"
+
+      - name: Generate and verify final config
+        run: |
+          ./scripts/configure-kernel.sh \
+            "$GITHUB_WORKSPACE/work/kernel" \
+            "$GITHUB_WORKSPACE/work/out" \
+            "$GITHUB_WORKSPACE/work/clang-r547379" \
+            "$GITHUB_WORKSPACE/config/yaap16-resuki.config"
+          ./scripts/verify-config.sh "$GITHUB_WORKSPACE/work/out/.config"
+          python3 ./scripts/verify-config-diff.py \
+            "$GITHUB_WORKSPACE/work/out-baseline/.config" \
+            "$GITHUB_WORKSPACE/work/out/.config"
+
+      - name: Build kernel Image
+        id: build
+        run: |
+          ./scripts/build-kernel.sh \
+            "$GITHUB_WORKSPACE/work/kernel" \
+            "$GITHUB_WORKSPACE/work/out" \
+            "$GITHUB_WORKSPACE/work/clang-r547379" \
+            "$GITHUB_WORKSPACE/work/build.log"
+
+      - name: Package flashable AnyKernel3 ZIP and checksums
+        id: package
+        run: |
+          ./scripts/package-anykernel.sh \
+            "$GITHUB_WORKSPACE/work/anykernel" \
+            "$GITHUB_WORKSPACE/work/kernel" \
+            "$GITHUB_WORKSPACE/work/resuki" \
+            "$GITHUB_WORKSPACE/work/clang-r547379" \
+            "$GITHUB_WORKSPACE/work/out" \
+            "$GITHUB_WORKSPACE/artifacts"
+
+      - name: Upload verified build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ${{ steps.package.outputs.artifact_name }}
+          path: artifacts/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+      - name: Upload build log on failure
+        if: failure() && hashFiles('work/build.log') != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: yaap16-guacamoleb-kernel-build-log-${{ github.run_id }}
+          path: work/build.log
+          if-no-files-found: ignore
+          retention-days: 7
