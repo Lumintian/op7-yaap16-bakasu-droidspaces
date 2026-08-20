@@ -144,6 +144,18 @@ class ProjectTests(unittest.TestCase):
         self.assertIn("permissions:\n  contents: read", workflow)
         self.assertIn("persist-credentials: false", workflow)
 
+    def test_successful_build_adds_matching_resuki_release_summary(self) -> None:
+        workflow = (ROOT / ".github/workflows/build.yml").read_text()
+        resolver = (ROOT / "scripts/attach-resuki-release.py").read_text()
+        self.assertIn("Add matching ReSukiSU Manager release to run summary", workflow)
+        self.assertIn("if: success()", workflow)
+        self.assertIn("attach-resuki-release.py", workflow)
+        self.assertIn("GITHUB_STEP_SUMMARY", resolver)
+        self.assertIn('"head_sha"', resolver)
+        self.assertIn('"Manager-release"', resolver)
+        self.assertIn('WORKFLOW_FILE = "build-manager.yml"', resolver)
+        self.assertIn("actions/workflows/", resolver)
+
     def test_shell_files_parse(self) -> None:
         scripts = sorted((ROOT / "scripts").glob("*.sh")) + [ROOT / "packaging/anykernel.sh"]
         for script in scripts:

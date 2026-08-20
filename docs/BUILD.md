@@ -9,7 +9,7 @@
 1. 把项目推送到 GitHub，默认分支设为 `main`。
 2. 在仓库 Settings → Actions 中允许 GitHub Actions。
 3. 进入 Actions 页面，手动运行构建工作流。
-4. 完整成功后下载主 artifact；失败时会另行上传 `build.log`（如果已经进入编译阶段）。
+4. 完整成功后下载主 artifact；失败时会另行上传 `build.log`（如果已经进入编译阶段）。成功运行的 Summary 还会按固定的 ReSukiSU commit 查找 `build-manager.yml` 的 `Manager-release` artifact，并附上对应的 workflow run 和下载页面链接。
 
 ## 2. CI 实际执行的门禁
 

@@ -106,6 +106,13 @@ jobs:
           compression-level: 0
           retention-days: 14
 
+      - name: Add matching ReSukiSU Manager release to run summary
+        if: success()
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 ./scripts/attach-resuki-release.py
+
       - name: Upload build log on failure
         if: failure() && hashFiles('work/build.log') != ''
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

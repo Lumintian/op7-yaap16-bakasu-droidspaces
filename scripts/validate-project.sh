@@ -13,6 +13,7 @@ for script in "$ROOT_DIR"/scripts/*.sh "$ROOT_DIR"/packaging/anykernel.sh; do
 done
 
 python3 -m py_compile \
+  "$ROOT_DIR/scripts/attach-resuki-release.py" \
   "$ROOT_DIR/scripts/verify-config-diff.py" \
   "$ROOT_DIR/scripts/verify-fragment.py"
 python3 -m unittest discover -s "$ROOT_DIR/tests" -p 'test_*.py' -v
