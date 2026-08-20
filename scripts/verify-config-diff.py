@@ -45,6 +45,7 @@ DROIDSPACES_KEYS = {
     "CONFIG_NETFILTER_ADVANCED",
     "CONFIG_NETFILTER_XT_MATCH_ADDRTYPE",
     "CONFIG_NETFILTER_XT_MATCH_PHYSDEV",
+    "CONFIG_NETFILTER_XT_TARGET_CHECKSUM",
     "CONFIG_NETFILTER_XT_TARGET_TCPMSS",
     "CONFIG_NET_NS",
     "CONFIG_NF_CONNTRACK",
@@ -73,6 +74,11 @@ def allowed(key: str) -> bool:
     return key.startswith("CONFIG_KSU") or key in DROIDSPACES_KEYS
 
 
+def effective(values: dict[str, str], key: str) -> str:
+    # Invisible Kconfig entries have the same meaning as "is not set".
+    return values.get(key, "n")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("baseline", type=Path)
@@ -84,7 +90,7 @@ def main() -> int:
     changed = {
         key: (baseline.get(key, "<absent>"), final.get(key, "<absent>"))
         for key in sorted(baseline.keys() | final.keys())
-        if baseline.get(key) != final.get(key)
+        if effective(baseline, key) != effective(final, key)
     }
     unexpected = {key: values for key, values in changed.items() if not allowed(key)}
 

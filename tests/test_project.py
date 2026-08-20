@@ -98,6 +98,7 @@ class ProjectTests(unittest.TestCase):
             "CONFIG_NF_NAT=y",
             "CONFIG_IP_NF_TARGET_MASQUERADE=y",
             "CONFIG_NETFILTER_XT_TARGET_TCPMSS=y",
+            "CONFIG_NETFILTER_XT_TARGET_CHECKSUM=y",
             "CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y",
             "CONFIG_NF_CT_NETLINK=y",
             "CONFIG_NF_NAT_REDIRECT=y",
@@ -203,6 +204,21 @@ class ProjectTests(unittest.TestCase):
             )
             self.assertNotEqual(bad.returncode, 0)
             self.assertIn("UNEXPECTED CONFIG_FOO", bad.stdout)
+
+            # Newly visible but still-disabled symbols are not a real change.
+            final.write_text(
+                "CONFIG_KSU=y\n"
+                "CONFIG_DEVTMPFS=y\n"
+                "CONFIG_NAMESPACES=y\n"
+                "CONFIG_FOO=y\n"
+                "# CONFIG_BAR is not set\n"
+            )
+            visible = subprocess.run(
+                ["python3", str(checker), str(baseline), str(final)],
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(visible.returncode, 0, visible.stdout + visible.stderr)
 
     def test_fragment_verifier(self) -> None:
         checker = ROOT / "scripts/verify-fragment.py"
