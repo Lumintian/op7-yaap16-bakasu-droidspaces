@@ -59,11 +59,55 @@ class ProjectTests(unittest.TestCase):
             self.assertIn(symbol, text)
         self.assertNotIn("SUSFS", text.upper())
 
-    def test_final_fragment_selects_manual_hook_without_susfs(self) -> None:
-        config = (ROOT / "config/yaap16-resuki.config").read_text()
+    def test_final_fragment_selects_droidspaces_docker_and_manual_hook(self) -> None:
+        config = (ROOT / "config/yaap16-droidspaces-resukisu.fragment").read_text()
         required = (
+            "CONFIG_SYSCTL=y",
+            "CONFIG_SYSVIPC=y",
+            "CONFIG_POSIX_MQUEUE=y",
+            "CONFIG_NAMESPACES=y",
+            "CONFIG_PID_NS=y",
+            "CONFIG_UTS_NS=y",
+            "CONFIG_IPC_NS=y",
+            "CONFIG_NET_NS=y",
+            "CONFIG_CGROUPS=y",
+            "CONFIG_CGROUP_DEVICE=y",
+            "CONFIG_CGROUP_PIDS=y",
+            "CONFIG_MEMCG=y",
+            "CONFIG_CGROUP_SCHED=y",
+            "CONFIG_FAIR_GROUP_SCHED=y",
+            "CONFIG_CGROUP_FREEZER=y",
+            "CONFIG_CGROUP_NET_PRIO=y",
+            "CONFIG_SECCOMP=y",
+            "CONFIG_SECCOMP_FILTER=y",
             "CONFIG_DEVTMPFS=y",
             "# CONFIG_DEVTMPFS_MOUNT is not set",
+            "CONFIG_OVERLAY_FS=y",
+            "CONFIG_TMPFS_POSIX_ACL=y",
+            "CONFIG_TMPFS_XATTR=y",
+            "CONFIG_FW_LOADER=y",
+            "CONFIG_FW_LOADER_USER_HELPER=y",
+            "CONFIG_VETH=y",
+            "CONFIG_BRIDGE=y",
+            "CONFIG_NETFILTER=y",
+            "CONFIG_BRIDGE_NETFILTER=y",
+            "CONFIG_NETFILTER_ADVANCED=y",
+            "CONFIG_NF_CONNTRACK=y",
+            "CONFIG_IP_NF_IPTABLES=y",
+            "CONFIG_IP_NF_FILTER=y",
+            "CONFIG_NF_NAT=y",
+            "CONFIG_NF_TABLES=y",
+            "CONFIG_IP_NF_TARGET_MASQUERADE=y",
+            "CONFIG_NETFILTER_XT_TARGET_TCPMSS=y",
+            "CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y",
+            "CONFIG_NF_CT_NETLINK=y",
+            "CONFIG_NF_NAT_REDIRECT=y",
+            "CONFIG_IP_ADVANCED_ROUTER=y",
+            "CONFIG_IP_MULTIPLE_TABLES=y",
+            "CONFIG_NF_CONNTRACK_IPV4=y",
+            "CONFIG_NF_NAT_IPV4=y",
+            "CONFIG_IP_NF_NAT=y",
+            "CONFIG_USER_NS=y",
             "CONFIG_KSU=y",
             "CONFIG_KSU_MANUAL_HOOK=y",
             "# CONFIG_KSU_TRACEPOINT_HOOK is not set",
@@ -72,6 +116,9 @@ class ProjectTests(unittest.TestCase):
         for line in required:
             self.assertIn(line, config)
         self.assertNotRegex(config, r"^CONFIG_KSU_SUSFS(?:_[A-Z0-9_]+)?=y$", re.MULTILINE)
+
+    def test_resuki_pin_is_current_main_head(self) -> None:
+        self.assertEqual(pin("RESUKI_COMMIT"), "06390a6acbb7e966b3e1cda00fc1b93e89f11086")
 
     def test_anykernel_has_strict_device_rom_and_boot_safety_guards(self) -> None:
         script = (ROOT / "packaging/anykernel.sh").read_text()
@@ -108,8 +155,18 @@ class ProjectTests(unittest.TestCase):
             temp_path = Path(temp)
             baseline = temp_path / "baseline"
             final = temp_path / "final"
-            baseline.write_text("# CONFIG_KSU is not set\n# CONFIG_DEVTMPFS is not set\nCONFIG_FOO=y\n")
-            final.write_text("CONFIG_KSU=y\nCONFIG_DEVTMPFS=y\nCONFIG_FOO=y\n")
+            baseline.write_text(
+                "# CONFIG_KSU is not set\n"
+                "# CONFIG_DEVTMPFS is not set\n"
+                "# CONFIG_NAMESPACES is not set\n"
+                "CONFIG_FOO=y\n"
+            )
+            final.write_text(
+                "CONFIG_KSU=y\n"
+                "CONFIG_DEVTMPFS=y\n"
+                "CONFIG_NAMESPACES=y\n"
+                "CONFIG_FOO=y\n"
+            )
             ok = subprocess.run(
                 ["python3", str(checker), str(baseline), str(final)],
                 text=True,

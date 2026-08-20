@@ -57,21 +57,21 @@ jobs:
       - name: Apply manual hooks and wire ReSukiSU
         run: ./scripts/prepare-kernel.sh "$GITHUB_WORKSPACE/work/kernel" "$GITHUB_WORKSPACE/work/resuki"
 
-      - name: Generate safety baseline config
+      - name: Generate safety-gate baseline .config
         run: |
           ./scripts/configure-kernel.sh \
             "$GITHUB_WORKSPACE/work/kernel" \
             "$GITHUB_WORKSPACE/work/out-baseline" \
             "$GITHUB_WORKSPACE/work/clang-r547379" \
-            "$GITHUB_WORKSPACE/config/yaap16-baseline.config"
+            "$GITHUB_WORKSPACE/config/yaap16-safety-baseline.fragment"
 
-      - name: Generate and verify final config
+      - name: Generate and verify final feature .config
         run: |
           ./scripts/configure-kernel.sh \
             "$GITHUB_WORKSPACE/work/kernel" \
             "$GITHUB_WORKSPACE/work/out" \
             "$GITHUB_WORKSPACE/work/clang-r547379" \
-            "$GITHUB_WORKSPACE/config/yaap16-resuki.config"
+            "$GITHUB_WORKSPACE/config/yaap16-droidspaces-resukisu.fragment"
           ./scripts/verify-config.sh "$GITHUB_WORKSPACE/work/out/.config"
           python3 ./scripts/verify-config-diff.py \
             "$GITHUB_WORKSPACE/work/out-baseline/.config" \

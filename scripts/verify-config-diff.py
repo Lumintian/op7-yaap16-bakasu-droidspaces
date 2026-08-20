@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reject final config changes outside the explicit ReSuki/devtmpfs allowlist."""
+"""Reject final config changes outside the explicit Droidspaces/Docker/ReSukiSU allowlist."""
 
 from __future__ import annotations
 
@@ -19,11 +19,58 @@ def parse_config(path: Path) -> dict[str, str]:
     return values
 
 
+DROIDSPACES_KEYS = {
+    "CONFIG_BRIDGE",
+    "CONFIG_BRIDGE_NETFILTER",
+    "CONFIG_CGROUP_DEVICE",
+    "CONFIG_CGROUP_FREEZER",
+    "CONFIG_CGROUP_NET_PRIO",
+    "CONFIG_CGROUP_PIDS",
+    "CONFIG_CGROUP_SCHED",
+    "CONFIG_CGROUPS",
+    "CONFIG_DEVTMPFS",
+    "CONFIG_DEVTMPFS_MOUNT",
+    "CONFIG_FAIR_GROUP_SCHED",
+    "CONFIG_FW_LOADER",
+    "CONFIG_FW_LOADER_USER_HELPER",
+    "CONFIG_IP_ADVANCED_ROUTER",
+    "CONFIG_IPC_NS",
+    "CONFIG_IP_MULTIPLE_TABLES",
+    "CONFIG_IP_NF_FILTER",
+    "CONFIG_IP_NF_IPTABLES",
+    "CONFIG_IP_NF_NAT",
+    "CONFIG_IP_NF_TARGET_MASQUERADE",
+    "CONFIG_MEMCG",
+    "CONFIG_NAMESPACES",
+    "CONFIG_NETFILTER",
+    "CONFIG_NETFILTER_ADVANCED",
+    "CONFIG_NETFILTER_XT_MATCH_ADDRTYPE",
+    "CONFIG_NETFILTER_XT_TARGET_TCPMSS",
+    "CONFIG_NET_NS",
+    "CONFIG_NF_CONNTRACK",
+    "CONFIG_NF_CONNTRACK_IPV4",
+    "CONFIG_NF_CT_NETLINK",
+    "CONFIG_NF_NAT",
+    "CONFIG_NF_NAT_IPV4",
+    "CONFIG_NF_NAT_REDIRECT",
+    "CONFIG_NF_TABLES",
+    "CONFIG_OVERLAY_FS",
+    "CONFIG_PID_NS",
+    "CONFIG_POSIX_MQUEUE",
+    "CONFIG_SECCOMP",
+    "CONFIG_SECCOMP_FILTER",
+    "CONFIG_SYSCTL",
+    "CONFIG_SYSVIPC",
+    "CONFIG_TMPFS_POSIX_ACL",
+    "CONFIG_TMPFS_XATTR",
+    "CONFIG_USER_NS",
+    "CONFIG_UTS_NS",
+    "CONFIG_VETH",
+}
+
+
 def allowed(key: str) -> bool:
-    return key.startswith("CONFIG_KSU") or key in {
-        "CONFIG_DEVTMPFS",
-        "CONFIG_DEVTMPFS_MOUNT",
-    }
+    return key.startswith("CONFIG_KSU") or key in DROIDSPACES_KEYS
 
 
 def main() -> int:

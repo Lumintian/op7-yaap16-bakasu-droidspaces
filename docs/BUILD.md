@@ -26,10 +26,10 @@
 运行 ReSuki manual_hook_check.mk + static_export_check.mk
                    │
                    ▼
-生成 baseline .config（KSU=n、DEVTMPFS=n）
+生成安全基准 .config（仅作差异基线，KSU=n、DEVTMPFS=n）
                    │
                    ▼
-生成 final .config（KSU manual、DEVTMPFS=y、SUSFS=n）
+生成最终 .config（Droidspaces/嵌套 Docker 前置条件、ReSukiSU manual、DEVTMPFS=y、SUSFS=n）
                    │
                    ▼
 拒绝 allowlist 外的任何 config 变化
@@ -41,9 +41,30 @@
 AnyKernel3 打包、ZIP 自检、生成 SHA256SUMS
 ```
 
+这里的 `*.fragment` 不是完整的 `.config`：安全基准 fragment 只服务于 CI 的差异安全门禁，最终功能 fragment 则合并到 YAAP defconfig 上生成实际编译配置。
+
 最终必须满足的关键配置：
 
 ```text
+CONFIG_NAMESPACES=y
+CONFIG_PID_NS=y
+CONFIG_UTS_NS=y
+CONFIG_IPC_NS=y
+CONFIG_NET_NS=y
+CONFIG_CGROUPS=y
+CONFIG_CGROUP_DEVICE=y
+CONFIG_CGROUP_PIDS=y
+CONFIG_MEMCG=y
+CONFIG_SECCOMP=y
+CONFIG_SECCOMP_FILTER=y
+CONFIG_OVERLAY_FS=y
+CONFIG_VETH=y
+CONFIG_BRIDGE=y
+CONFIG_NETFILTER=y
+CONFIG_NF_CONNTRACK=y
+CONFIG_NF_NAT=y
+CONFIG_IP_NF_IPTABLES=y
+CONFIG_IP_NF_TARGET_MASQUERADE=y
 CONFIG_DEVTMPFS=y
 # CONFIG_DEVTMPFS_MOUNT is not set
 CONFIG_KSU=y
@@ -78,6 +99,8 @@ make test
 它会检查 shell/Python 语法、固定 SHA、补丁范围与哈希、Kconfig 策略、AnyKernel3 安全门禁，以及 workflow 中所有 Action 是否固定到 40 位 commit。
 
 完整内核编译应留在 Linux GitHub runner。macOS 默认大小写不敏感的文件系统会让 YAAP 树中大小写不同的 netfilter 文件发生碰撞，不能作为权威构建环境。
+
+Docker 运行时仍需在 Droidspaces 中选择 NAT 网络，并使用 ext4 `/data` 或 `rootfs.img`；Linux 4.14 容器建议切换到 `iptables-legacy`，Docker 遇到 cgroup/存储驱动不兼容时使用 `cgroupfs` 和 `vfs`。
 
 ## 5. 更新任一上游版本
 

@@ -3,9 +3,10 @@
 本仓库是一个**仅针对 OnePlus 7（`guacamoleb`）和指定 YAAP16 版本**的 GitHub Actions 构建封装。它会：
 
 - 从 YAAP 官方 Linux 4.14.336 内核的固定提交构建；
+- 启用 Droidspaces 的容器与嵌套 Docker 所需内核配置，包括 namespaces、cgroups、seccomp、overlayfs、veth/bridge 和 IPv4 NAT；
 - 启用 `CONFIG_DEVTMPFS=y`，供 Droidspaces 硬件访问模式挂载 devtmpfs；
 - 保持 `CONFIG_DEVTMPFS_MOUNT` 关闭，不改变 Android 主机 `/dev` 的启动挂载行为；
-- 集成固定提交的 ReSukiSU，使用 Linux 4.14 支持的 manual hook；
+- 集成 ReSukiSU `main` 分支当前 pin 的提交，使用 Linux 4.14 支持的 manual hook；
 - **不启用 SUSFS**；
 - 生成仅替换内核 `Image`、保留当前 ramdisk/DTB/AVB flags 的 AnyKernel3 ZIP；
 - 输出原始 `Image`、最终 `.config`、构建元数据及 SHA-256 校验文件。
@@ -20,7 +21,7 @@
 | ROM | `16-Banshee-guacamoleb-20260522` |
 | Android build | `BP4A.251205.006` |
 | YAAP kernel | `3a3c6bb4fa9cbeca5aed90f46ba2d907980e2b56` |
-| ReSukiSU | `06390a6acbb7e966b3e1cda00fc1b93e89f11086` |
+| ReSukiSU | `main` @ `06390a6acbb7e966b3e1cda00fc1b93e89f11086` |
 | Clang | AOSP `clang-r547379`，prebuilt commit `9916fb51…` |
 | AnyKernel3 | `e4b1bb25ca2aabcfd57f694a5998d87130701b71` |
 
@@ -46,17 +47,19 @@
 
 - 上游源码、Actions、工具链目录和补丁都使用不可变提交或 SHA-256 固定。
 - ReSuki 完整 Git 历史用于生成稳定 version code；显示名称只使用 commit SHA，不依赖可后加的 tag。
-- baseline/final `.config` 自动比较，只允许 `CONFIG_KSU*` 与 devtmpfs 两类变化。
+- 安全基准 `.config` 与最终 `.config` 自动比较，只允许 Droidspaces/嵌套 Docker、`CONFIG_KSU*` 与 devtmpfs 相关变化。
 - 最终配置强制 SELinux、无模块、`KALLSYMS_ALL=n`、manual hook、SUSFS 关闭。
 - AnyKernel3 只处理当前 active slot；不改 ramdisk，不自动改 AVB flags。
 - 原始 `Image` 仅供审计，**不能当作完整 `boot.img` 用 fastboot 直接刷入**。
+
+`config/` 下的 `*.fragment` 是合并输入，不是完整的内核 `.config`：`yaap16-safety-baseline.fragment` 仅用于 CI 安全基准，`yaap16-droidspaces-resukisu.fragment` 用于生成最终功能配置。
 
 ## 目录
 
 ```text
 .github/workflows/build.yml       固定版本的 CI 流程
 config/pins.sh                    所有不可变输入和目标 ROM 标识
-config/*.config                   baseline 与最终 Kconfig fragment
+config/*.fragment                 安全基准与最终功能 Kconfig fragment
 patches/                          YAAP 4.14 manual-hook 精确补丁
 scripts/                          获取、验证、配置、构建和打包脚本
 packaging/anykernel.sh            严格设备/ROM 检查的刷机脚本

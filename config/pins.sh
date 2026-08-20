@@ -3,6 +3,7 @@ YAAP_KERNEL_REPO=https://github.com/yaap/kernel_oneplus_sm8150.git
 YAAP_KERNEL_COMMIT=3a3c6bb4fa9cbeca5aed90f46ba2d907980e2b56
 
 RESUKI_REPO=https://github.com/ReSukiSU/ReSukiSU.git
+# Current refs/heads/main tip at pin time; keep the checkout immutable.
 RESUKI_COMMIT=06390a6acbb7e966b3e1cda00fc1b93e89f11086
 
 ANYKERNEL_REPO=https://github.com/osm0sis/AnyKernel3.git
