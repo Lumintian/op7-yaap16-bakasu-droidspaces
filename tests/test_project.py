@@ -73,7 +73,6 @@ class ProjectTests(unittest.TestCase):
             "CONFIG_CGROUPS=y",
             "CONFIG_CGROUP_DEVICE=y",
             "CONFIG_CGROUP_PIDS=y",
-            "CONFIG_MEMCG=y",
             "CONFIG_CGROUP_SCHED=y",
             "CONFIG_FAIR_GROUP_SCHED=y",
             "CONFIG_CGROUP_FREEZER=y",
@@ -96,7 +95,6 @@ class ProjectTests(unittest.TestCase):
             "CONFIG_IP_NF_IPTABLES=y",
             "CONFIG_IP_NF_FILTER=y",
             "CONFIG_NF_NAT=y",
-            "CONFIG_NF_TABLES=y",
             "CONFIG_IP_NF_TARGET_MASQUERADE=y",
             "CONFIG_NETFILTER_XT_TARGET_TCPMSS=y",
             "CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y",
@@ -116,6 +114,13 @@ class ProjectTests(unittest.TestCase):
         for line in required:
             self.assertIn(line, config)
         self.assertNotRegex(config, r"^CONFIG_KSU_SUSFS(?:_[A-Z0-9_]+)?=y$", re.MULTILINE)
+        for omitted in (
+            "CONFIG_MEMCG=y",
+            "CONFIG_NF_TABLES=y",
+            "CONFIG_CFS_BANDWIDTH=y",
+            "CONFIG_NETFILTER_XT_TARGET_MASQUERADE=y",
+        ):
+            self.assertNotIn(omitted, config)
 
     def test_resuki_pin_is_current_main_head(self) -> None:
         self.assertEqual(pin("RESUKI_COMMIT"), "06390a6acbb7e966b3e1cda00fc1b93e89f11086")

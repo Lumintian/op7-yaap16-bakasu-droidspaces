@@ -107,9 +107,9 @@ adb shell 'zcat /proc/config.gz 2>/dev/null | grep -E "CONFIG_(NAMESPACES|PID_NS
 1. 从 ReSukiSU 官方渠道安装与该内核兼容的 Manager；本 artifact 不捆绑 APK。
 2. 确认 Manager 显示内核集成，版本名应包含 `06390a6a@ReSukiSU`。
 3. 只给测试终端临时授权 root，确认授权/撤销正常。
-4. 运行 Droidspaces v6.5.0 的完整内核检查，确认 namespaces、cgroups、seccomp、overlayfs、veth/bridge、NAT 和 devtmpfs 均通过，原来已通过的项目没有回退。
+4. 运行 Droidspaces v6.5.0 的完整内核检查，确认 namespaces、cgroups、seccomp、overlayfs、veth/bridge、NAT 和 devtmpfs 均通过，原来已通过的项目没有回退。检查器可能仍提示缺少 memcg / nftables：这是刻意关闭的（4.14 上 memcg 开销大，nftables 不完整），不影响 iptables-legacy NAT 和普通 Docker 容器。
 5. 创建测试空间时选择 NAT 网络，并使用 ext4 `/data` 或 `rootfs.img`；在 Linux 4.14 容器内切换到 `iptables-legacy`。
-6. 在容器内安装 Docker，必要时将 Docker 存储驱动设为 `vfs`、cgroup 驱动设为 `cgroupfs`，然后运行 `docker run --rm hello-world`。
+6. 在容器内安装 Docker，必要时将 Docker 存储驱动设为 `vfs`、cgroup 驱动设为 `cgroupfs`，然后运行 `docker run --rm hello-world`。不要依赖 `docker run --memory` / `--cpus`：内核未开 memcg 和 CFS bandwidth。
 7. 依次检查空间启动、网络、DNS、存储、GPU/硬件访问和停止/删除，再重启一次确认不是偶然成功。
 
 ## 5. 回滚
