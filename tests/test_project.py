@@ -65,6 +65,7 @@ class ProjectTests(unittest.TestCase):
             "CONFIG_SYSCTL=y",
             "CONFIG_SYSVIPC=y",
             "CONFIG_POSIX_MQUEUE=y",
+            "CONFIG_POSIX_MQUEUE_SYSCTL=y",
             "CONFIG_NAMESPACES=y",
             "CONFIG_PID_NS=y",
             "CONFIG_UTS_NS=y",
@@ -121,6 +122,9 @@ class ProjectTests(unittest.TestCase):
             "CONFIG_NETFILTER_XT_TARGET_MASQUERADE=y",
         ):
             self.assertNotIn(omitted, config)
+        allowlist = (ROOT / "scripts/verify-config-diff.py").read_text()
+        self.assertIn('"CONFIG_POSIX_MQUEUE_SYSCTL"', allowlist)
+        self.assertIn('"CONFIG_NETFILTER_XT_MATCH_PHYSDEV"', allowlist)
 
     def test_resuki_pin_is_current_main_head(self) -> None:
         self.assertEqual(pin("RESUKI_COMMIT"), "06390a6acbb7e966b3e1cda00fc1b93e89f11086")
