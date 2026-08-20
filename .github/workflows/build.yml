@@ -65,13 +65,13 @@ jobs:
             "$GITHUB_WORKSPACE/work/clang-r547379" \
             "$GITHUB_WORKSPACE/config/yaap16-safety-baseline.fragment"
 
-      - name: Generate and verify final feature .config
+      - name: Generate and verify final kernel .config
         run: |
           ./scripts/configure-kernel.sh \
             "$GITHUB_WORKSPACE/work/kernel" \
             "$GITHUB_WORKSPACE/work/out" \
             "$GITHUB_WORKSPACE/work/clang-r547379" \
-            "$GITHUB_WORKSPACE/config/yaap16-droidspaces-resukisu.fragment"
+            "$GITHUB_WORKSPACE/config/yaap16-kernel-overrides.fragment"
           ./scripts/verify-config.sh "$GITHUB_WORKSPACE/work/out/.config"
           python3 ./scripts/verify-config-diff.py \
             "$GITHUB_WORKSPACE/work/out-baseline/.config" \

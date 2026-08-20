@@ -52,7 +52,7 @@
 - AnyKernel3 只处理当前 active slot；不改 ramdisk，不自动改 AVB flags。
 - 原始 `Image` 仅供审计，**不能当作完整 `boot.img` 用 fastboot 直接刷入**。
 
-`config/` 下的 `*.fragment` 是合并输入，不是完整的内核 `.config`：`yaap16-safety-baseline.fragment` 仅用于 CI 安全基准，`yaap16-droidspaces-resukisu.fragment` 用于生成最终功能配置。
+`config/` 下的 `*.fragment` 是合并输入，不是完整的内核 `.config`：`yaap16-safety-baseline.fragment` 仅用于 CI 安全基准，`yaap16-kernel-overrides.fragment` 用于生成最终内核配置，可包含当前项目需要的各类内核设置。
 
 ## 目录
 

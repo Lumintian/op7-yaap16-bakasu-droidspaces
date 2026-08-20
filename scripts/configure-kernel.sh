@@ -8,7 +8,7 @@ source "$SCRIPT_DIR/common.sh"
 kernel_dir="${1:-}"
 out_dir="${2:-}"
 clang_dir="${3:-}"
-fragment="${4:-$ROOT_DIR/config/yaap16-droidspaces-resukisu.fragment}"
+fragment="${4:-$ROOT_DIR/config/yaap16-kernel-overrides.fragment}"
 [[ -n "$kernel_dir" && -n "$out_dir" && -n "$clang_dir" ]] \
   || die "usage: $0 <kernel-dir> <out-dir> <clang-dir> [config-fragment]"
 

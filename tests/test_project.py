@@ -60,7 +60,7 @@ class ProjectTests(unittest.TestCase):
         self.assertNotIn("SUSFS", text.upper())
 
     def test_final_fragment_selects_droidspaces_docker_and_manual_hook(self) -> None:
-        config = (ROOT / "config/yaap16-droidspaces-resukisu.fragment").read_text()
+        config = (ROOT / "config/yaap16-kernel-overrides.fragment").read_text()
         required = (
             "CONFIG_SYSCTL=y",
             "CONFIG_SYSVIPC=y",

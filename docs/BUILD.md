@@ -41,7 +41,7 @@
 AnyKernel3 打包、ZIP 自检、生成 SHA256SUMS
 ```
 
-这里的 `*.fragment` 不是完整的 `.config`：安全基准 fragment 只服务于 CI 的差异安全门禁，最终功能 fragment 则合并到 YAAP defconfig 上生成实际编译配置。
+这里的 `*.fragment` 不是完整的 `.config`：安全基准 fragment 只服务于 CI 的差异安全门禁，`yaap16-kernel-overrides.fragment` 则合并到 YAAP defconfig 上生成实际编译配置。
 
 最终必须满足的关键配置：
 
