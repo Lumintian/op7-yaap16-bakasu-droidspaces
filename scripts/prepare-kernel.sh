@@ -73,6 +73,7 @@ drivers/Makefile
 fs/exec.c
 fs/open.c
 fs/stat.c
+kernel/cgroup/cgroup.c
 kernel/reboot.c
 security/selinux/selinuxfs.c
 EOF_EXPECTED

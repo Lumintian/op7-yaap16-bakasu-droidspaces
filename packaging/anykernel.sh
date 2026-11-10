@@ -2,7 +2,7 @@
 ### Replaces only the kernel Image; preserves the installed ramdisk and boot metadata.
 
 properties() { '
-kernel.string=YAAP16 Droidspaces + ReSukiSU for OnePlus 7
+kernel.string=YAAP16 Droidspaces + BakaSU for OnePlus 7
 do.devicecheck=1
 do.modules=0
 do.systemless=1

@@ -1,4 +1,4 @@
-name: Build YAAP16 guacamoleb Droidspaces + ReSukiSU kernel
+name: Build YAAP16 guacamoleb Droidspaces + BakaSU kernel
 
 on:
   workflow_dispatch:

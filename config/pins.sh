@@ -2,9 +2,9 @@
 YAAP_KERNEL_REPO=https://github.com/yaap/kernel_oneplus_sm8150.git
 YAAP_KERNEL_COMMIT=3a3c6bb4fa9cbeca5aed90f46ba2d907980e2b56
 
-RESUKI_REPO=https://github.com/ReSukiSU/ReSukiSU.git
-# Current refs/heads/main tip at pin time; keep the checkout immutable.
-RESUKI_COMMIT=06390a6acbb7e966b3e1cda00fc1b93e89f11086
+RESUKI_REPO=https://github.com/Baka-SU/BakaSU.git
+# Pinned BakaSU v4.2.0-rc3 release tag commit; keep the checkout immutable.
+RESUKI_COMMIT=239e1e8871784369a34a78a47f9a0e4f288b263d
 
 ANYKERNEL_REPO=https://github.com/osm0sis/AnyKernel3.git
 ANYKERNEL_COMMIT=e4b1bb25ca2aabcfd57f694a5998d87130701b71
@@ -16,7 +16,7 @@ CLANG_LLVM_REVISION=b718bcaf8c198c82f3021447d943401e3ab5bd54
 CLANG_ARCHIVE_URL=https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/9916fb51ccb914d62d35ad9a7b9b21d2ef046928/clang-r547379.tar.gz
 
 MANUAL_HOOK_PATCH=patches/0001-resukisu-manual-hooks-linux-4.14.patch
-MANUAL_HOOK_PATCH_SHA256=33ab7f5a620dc947d4dd428326859fb9589987c1a64c6d60a807ea69634d4c09
+MANUAL_HOOK_PATCH_SHA256=3bf4861c48b4ca7715f169f728004cfe4ca4dce15f0a2ee85610121b0f5cad7a
 
 DEVICE_CODENAME=guacamoleb
 EXPECTED_ANDROID_VERSION=16
@@ -28,5 +28,5 @@ EXPECTED_KERNEL_VERSION=4.14.336
 KERNEL_DEFCONFIG=gulch_defconfig
 KERNEL_DEBUG_FRAGMENT=vendor/debugfs.config
 KERNEL_IMAGE_NAME=Image
-KERNEL_LOCALVERSION=-yaap16-droidspaces-resuki
+KERNEL_LOCALVERSION=-yaap16-droidspaces-bakasu
 BOOT_PARTITION_SIZE=100663296

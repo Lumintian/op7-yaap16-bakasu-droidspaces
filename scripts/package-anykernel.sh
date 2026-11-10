@@ -126,7 +126,7 @@ for path in sorted(root.rglob("*"), reverse=True):
 os.utime(root, (epoch, epoch), follow_symlinks=False)
 PY
 short_resuki="${RESUKI_COMMIT:0:8}"
-zip_name="YAAP16-20260522-${DEVICE_CODENAME}-Droidspaces-ReSuki-${short_resuki}.zip"
+zip_name="YAAP16-20260522-${DEVICE_CODENAME}-Droidspaces-BakaSU-${short_resuki}.zip"
 zip_path="$artifact_dir/$zip_name"
 (
   cd "$stage"
@@ -148,6 +148,6 @@ install -m 0644 "$stage/build-info.txt" "$artifact_dir/build-info.txt"
 
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   printf 'artifact_name=%s\nzip_name=%s\n' \
-    "YAAP16-${DEVICE_CODENAME}-Droidspaces-ReSuki" "$zip_name" >> "$GITHUB_OUTPUT"
+    "YAAP16-${DEVICE_CODENAME}-Droidspaces-BakaSU" "$zip_name" >> "$GITHUB_OUTPUT"
 fi
 log "Packaged $zip_path"

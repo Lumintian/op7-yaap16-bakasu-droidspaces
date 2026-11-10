@@ -44,6 +44,7 @@ class ProjectTests(unittest.TestCase):
                 "fs/exec.c",
                 "fs/open.c",
                 "fs/stat.c",
+                "kernel/cgroup/cgroup.c",
                 "kernel/reboot.c",
                 "security/selinux/selinuxfs.c",
             ],
@@ -107,6 +108,11 @@ class ProjectTests(unittest.TestCase):
             "CONFIG_NF_CONNTRACK_IPV4=y",
             "CONFIG_NF_NAT_IPV4=y",
             "CONFIG_IP_NF_NAT=y",
+            "CONFIG_NF_NAT_IPV6=y",
+            "CONFIG_NF_NAT_MASQUERADE_IPV6=y",
+            "CONFIG_IP6_NF_NAT=y",
+            "CONFIG_IP6_NF_TARGET_MASQUERADE=y",
+            "CONFIG_MACVLAN=y",
             "CONFIG_USER_NS=y",
             "CONFIG_KSU=y",
             "CONFIG_KSU_MANUAL_HOOK=y",
@@ -128,7 +134,7 @@ class ProjectTests(unittest.TestCase):
         self.assertIn('"CONFIG_NETFILTER_XT_MATCH_PHYSDEV"', allowlist)
 
     def test_resuki_pin_is_current_main_head(self) -> None:
-        self.assertEqual(pin("RESUKI_COMMIT"), "06390a6acbb7e966b3e1cda00fc1b93e89f11086")
+        self.assertEqual(pin("RESUKI_COMMIT"), "239e1e8871784369a34a78a47f9a0e4f288b263d")
 
     def test_anykernel_has_strict_device_rom_and_boot_safety_guards(self) -> None:
         script = (ROOT / "packaging/anykernel.sh").read_text()

@@ -14,7 +14,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
-RESUKI_REPOSITORY = "ReSukiSU/ReSukiSU"
+RESUKI_REPOSITORY = "Baka-SU/BakaSU"
 WORKFLOW_FILE = "build-manager.yml"
 WORKFLOW_URL = (
     f"https://github.com/{RESUKI_REPOSITORY}/actions/workflows/{WORKFLOW_FILE}"
