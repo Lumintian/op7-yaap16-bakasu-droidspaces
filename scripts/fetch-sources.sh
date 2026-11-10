@@ -30,7 +30,7 @@ fetch_full_resuki_history() {
 
   log "Fetching full ReSukiSU history for deterministic version code"
   git clone --quiet --filter=blob:none --no-checkout "$RESUKI_REPO" "$destination"
-  git -C "$destination" fetch --quiet --force --tags origin
+  git -C "$destination" fetch --quiet --force --tags origin "$RESUKI_COMMIT"
   git -C "$destination" checkout --quiet --detach "$RESUKI_COMMIT"
   assert_git_head "$destination" "$RESUKI_COMMIT"
   assert_git_clean "$destination"

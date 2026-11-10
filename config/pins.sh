@@ -4,7 +4,7 @@ YAAP_KERNEL_COMMIT=3a3c6bb4fa9cbeca5aed90f46ba2d907980e2b56
 
 RESUKI_REPO=https://github.com/Baka-SU/BakaSU.git
 # Pinned BakaSU v4.2.0-rc3 release tag commit; keep the checkout immutable.
-RESUKI_COMMIT=239e1e8871784369a34a78a47f9a0e4f288b263d
+RESUKI_COMMIT=239e1e8871b8fcd51a6e5b3002e0ba522fdd99fb
 
 ANYKERNEL_REPO=https://github.com/osm0sis/AnyKernel3.git
 ANYKERNEL_COMMIT=e4b1bb25ca2aabcfd57f694a5998d87130701b71

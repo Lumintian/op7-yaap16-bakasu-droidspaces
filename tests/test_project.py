@@ -134,7 +134,7 @@ class ProjectTests(unittest.TestCase):
         self.assertIn('"CONFIG_NETFILTER_XT_MATCH_PHYSDEV"', allowlist)
 
     def test_resuki_pin_is_current_main_head(self) -> None:
-        self.assertEqual(pin("RESUKI_COMMIT"), "239e1e8871784369a34a78a47f9a0e4f288b263d")
+        self.assertEqual(pin("RESUKI_COMMIT"), "239e1e8871b8fcd51a6e5b3002e0ba522fdd99fb")
 
     def test_anykernel_has_strict_device_rom_and_boot_safety_guards(self) -> None:
         script = (ROOT / "packaging/anykernel.sh").read_text()
